@@ -14,20 +14,22 @@
         <item v-if="item.meta" :icon="item.meta.icon" :title="generateTitle(item.meta.title)" />
       </template>
 
-      <template v-for="child in item.children" v-if="!child.hidden">
-        <sidebar-item
-          v-if="child.children&&child.children.length>0"
-          :is-nest="true"
-          :item="child"
-          :key="child.path"
-          :base-path="resolvePath(child.path)"
-          class="nest-menu" />
+      <template v-for="child in item.children">
+        <template v-if="!child.hidden">
+          <sidebar-item
+            v-if="child.children&&child.children.length>0"
+            :is-nest="true"
+            :item="child"
+            :key="child.path"
+            :base-path="resolvePath(child.path)"
+            class="nest-menu" />
 
-        <app-link v-else :to="resolvePath(child.path)" :key="child.name">
-          <el-menu-item :index="resolvePath(child.path)">
-            <item v-if="child.meta" :icon="child.meta.icon" :title="generateTitle(child.meta.title)" />
-          </el-menu-item>
-        </app-link>
+          <app-link v-else :to="resolvePath(child.path)" :key="child.name">
+            <el-menu-item :index="resolvePath(child.path)">
+              <item v-if="child.meta" :icon="child.meta.icon" :title="generateTitle(child.meta.title)" />
+            </el-menu-item>
+          </app-link>
+        </template>
       </template>
     </el-submenu>
 
@@ -37,7 +39,7 @@
 <script>
 import path from 'path'
 import { generateTitle } from '@/utils/i18n'
-import { validateURL } from '@/utils/validate'
+import { isExternal } from '@/utils'
 import Item from './Item'
 import AppLink from './Link'
 import FixiOSBug from './FixiOSBug'
@@ -98,7 +100,7 @@ export default {
       return path.resolve(this.basePath, routePath)
     },
     isExternalLink(routePath) {
-      return validateURL(routePath)
+      return isExternal(routePath)
     },
     generateTitle
   }
