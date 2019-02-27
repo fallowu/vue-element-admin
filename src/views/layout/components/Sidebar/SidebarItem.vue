@@ -9,7 +9,7 @@
       </app-link>
     </template>
 
-    <el-submenu v-else ref="submenu" :index="resolvePath(item.path)">
+    <el-submenu v-else ref="subMenu" :index="resolvePath(item.path)">
       <template slot="title">
         <item v-if="item.meta" :icon="item.meta.icon" :title="generateTitle(item.meta.title)" />
       </template>
@@ -39,7 +39,7 @@
 <script>
 import path from 'path'
 import { generateTitle } from '@/utils/i18n'
-import { isExternal } from '@/utils'
+import { isExternal } from '@/utils/validate'
 import Item from './Item'
 import AppLink from './Link'
 import FixiOSBug from './FixiOSBug'
@@ -94,14 +94,12 @@ export default {
       return false
     },
     resolvePath(routePath) {
-      if (this.isExternalLink(routePath)) {
+      if (isExternal(routePath)) {
         return routePath
       }
       return path.resolve(this.basePath, routePath)
     },
-    isExternalLink(routePath) {
-      return isExternal(routePath)
-    },
+
     generateTitle
   }
 }
